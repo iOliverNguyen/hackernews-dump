@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eo pipefail
+
+task_run() {
+  go run . sync
+}
+
+task_debug() {
+  go run . --debug sync
+}
+
+source "${PROJECT_ROOT}/scripts/_cli.sh"
