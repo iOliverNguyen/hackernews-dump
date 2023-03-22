@@ -11,10 +11,10 @@ At the time of this writing, the HackerNew database has about 35 million items.
 ```bash
 cd hackernews
 direnv allow
-go run . sync
+go run . sync --concurrent=30 --update-back=1
 
 # for debugging
-go run . --debug sync
+go run . sync --debug
 ```
 
 Install [direnv](https://direnv.net/) if necessary.
@@ -30,6 +30,7 @@ The script will download the data from the [HackerNews API](https://github.com/H
   into a file as `<number>.partial.jsonl`, and when all 1000 items of the chunk are downloaded, the file will be named to
   `<number>.json`. It will skip the items that are already downloaded.
 - Subsequent runs will pick up the data from `.partial.jsonl` file and continue updating the data. It also take the new max item id and continue downloading the data from there.
+- Can use `--update-back` flag to update the data from the last N days, to have scores updated.
 - Use `--debug` flag to limit the goroutine, the number of items per chunk, etc. for easily seeing progress and debugging.
 
 ## License

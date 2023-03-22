@@ -16,6 +16,7 @@ var (
 	Concurrent     = 30
 	SaveCheckpoint = 100
 	DataDir        = "data"
+	UpdateBack     = 0
 
 	logger      = log.NewStdTextLogger(os.Stderr, 0)
 	client      = NewHNClient()
@@ -43,13 +44,6 @@ func Main() {
 	app := cli.App{
 		Name:        "hn",
 		Description: "HackerNews tool",
-		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name:        "debug",
-				Value:       false,
-				Destination: &flagDebug,
-			},
-		},
 		Action: func(ctx *cli.Context) error {
 			fmt.Println("HackerNews tool")
 			return nil
@@ -59,12 +53,40 @@ func Main() {
 				Name:   "sync",
 				Usage:  "sync data from hacker news into files",
 				Action: cmdSyncFiles,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:        "debug",
+						Usage:       "enable debug mode, set concurrent to 2, items_per_files to 10, and save checkpoint to 5",
+						Value:       false,
+						Destination: &flagDebug,
+					},
+					&cli.IntFlag{
+						Name:        "update-back",
+						Usage:       "update files that are newer than this number of days, for refetching updated scores",
+						Value:       0,
+						Destination: &UpdateBack,
+					},
+					&cli.IntFlag{
+						Name:        "concurrent",
+						Value:       30,
+						Destination: &Concurrent,
+					},
+				},
+			},
+			{
+				Name:   "load",
+				Usage:  "load data from files into memory",
+				Action: cmdLoadMem,
+				Flags: []cli.Flag{
+					&cli.IntFlag{
+						Name:        "concurrent",
+						Value:       30,
+						Destination: &Concurrent,
+					},
+				},
 			},
 		},
 		Before: func(context *cli.Context) error {
-			if flagDebug {
-				setupDebug()
-			}
 			setup()
 			return nil
 		},

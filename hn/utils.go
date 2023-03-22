@@ -19,3 +19,17 @@ func must[T any](v T, err error) T {
 	}
 	return v
 }
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
